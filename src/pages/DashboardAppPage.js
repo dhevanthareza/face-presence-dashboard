@@ -1,3 +1,5 @@
+
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
 // @mui
@@ -18,11 +20,16 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
+
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme = useTheme();
-
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    // Update the document title using the browser API
+    console.log('sadada')
+  }, []);
   return (
     <>
       <Helmet>
@@ -33,7 +40,6 @@ export default function DashboardAppPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
-
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
