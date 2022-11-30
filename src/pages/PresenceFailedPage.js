@@ -5,7 +5,7 @@ import AppDatatable from '../components/table/AppDatatable';
 
 const TABLE_HEAD = [
   { id: 'userId', label: 'UserId', alignRight: false },
-  { id: 'photo', label: 'Photo', alignRight: false },
+  { id: 'user_photo', label: 'User Photo', alignRight: false },
   { id: 'cropped_photo', label: 'Cropped Photo', alignRight: false },
 ];
 export default function PresenceFailed() {
@@ -30,9 +30,12 @@ export default function PresenceFailed() {
         tableHead={TABLE_HEAD}
         title="Presence"
         slots={{
-          photo: (photo, index) => {
+          userId: (user, index) => {
+            return user.fullname
+          },
+          user_photo: (photo, index, data) => {
             return (
-              <Button variant="contained" onClick={() => handleOpenPhoto(photo.location)}>
+              <Button variant="contained" onClick={() => handleOpenPhoto(data.userId.photo.location)}>
                 See Photo
               </Button>
             );

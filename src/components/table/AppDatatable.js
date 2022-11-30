@@ -159,7 +159,7 @@ export default function AppDatatable({baseUrl, tableHead, title, slots = {}}) {
                           tableHead.map((head, index) => {
                             return (
                               <TableCell key={index} align="left">
-                                { slots[head.id] ? slots[head.id](row[head.id], index) : row[head.id]}
+                                { slots[head.id] ? slots[head.id](row[head.id], index, row) : row[head.id]}
                               </TableCell>
                             );
                           })

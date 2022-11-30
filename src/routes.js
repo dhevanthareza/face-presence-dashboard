@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import PresencePage from './pages/PresencePage';
+import PresenceFailed from './pages/PresenceFailedPage';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'presence', element: <PresencePage /> },
-        { path: 'presence-failed', element: <BlogPage /> },
+        { path: 'presence-failed', element: <PresenceFailed /> },
       ],
     },
     {
