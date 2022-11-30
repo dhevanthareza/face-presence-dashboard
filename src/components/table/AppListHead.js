@@ -16,7 +16,7 @@ const visuallyHidden = {
   clip: 'rect(0 0 0 0)',
 };
 
-UserListHead.propTypes = {
+AppListHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
@@ -26,7 +26,7 @@ UserListHead.propTypes = {
   onSelectAllClick: PropTypes.func,
 };
 
-export default function UserListHead({
+export default function AppListHead({
   order,
   orderBy,
   rowCount,
@@ -49,9 +49,9 @@ export default function UserListHead({
             onChange={onSelectAllClick}
           />
         </TableCell>
-        {headLabel.map((headCell) => (
+        {headLabel.map((headCell, index) => (
           <TableCell
-            key={headCell.id}
+            key={index}
             align={headCell.alignRight ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
           >

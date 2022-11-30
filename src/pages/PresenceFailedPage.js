@@ -1,63 +1,51 @@
-import { Avatar, Dialog, DialogActions, DialogContent, Stack, Typography, Button } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AppDatatable from '../components/table/AppDatatable';
 
 const TABLE_HEAD = [
-  { id: 'fullname', label: 'Fullname', alignRight: false },
-  { id: 'email', label: 'Email', alignRight: false },
+  { id: 'userId', label: 'UserId', alignRight: false },
   { id: 'photo', label: 'Photo', alignRight: false },
   { id: 'cropped_photo', label: 'Cropped Photo', alignRight: false },
 ];
-
-export default function UserPage() {
+export default function PresenceFailed() {
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [photo, setPhoto] = useState(null);
 
-  
-
   const handleOpenPhoto = (photo) => {
-    setPhoto(photo)
-    setOpenImageDialog(true)
-  }
+    setPhoto(photo);
+    setOpenImageDialog(true);
+  };
 
   const handleCloseDialog = () => {
-    setOpenImageDialog(false)
-  }
-
+    setOpenImageDialog(false);
+  };
   return (
     <>
       <Helmet>
-        <title> User | Face Dashboard </title>
+        <title> Presence Failed | Face Dashboard </title>
       </Helmet>
       <AppDatatable
-        baseUrl={'/user'}
+        baseUrl={'/presence-failed'}
         tableHead={TABLE_HEAD}
-        title="User"
+        title="Presence"
         slots={{
-          fullname: (fullname, index) => {
-            return (
-              <Stack direction="row" alignItems="center" spacing={2}>
-                <Avatar alt={fullname} src={`/assets/images/avatars/avatar_${index + 1}.jpg`} />
-                <Typography variant="subtitle2" noWrap>
-                  {fullname}
-                </Typography>
-              </Stack>
-            );
-          },
           photo: (photo, index) => {
             return (
-              <Button variant="contained" onClick={() => handleOpenPhoto(photo.location)}>See Photo</Button>
+              <Button variant="contained" onClick={() => handleOpenPhoto(photo.location)}>
+                See Photo
+              </Button>
             );
           },
           cropped_photo: (croppedPhoto, index) => {
             return (
-              <Button variant="contained" onClick={() => handleOpenPhoto(croppedPhoto.location)}>See Photo</Button>
+              <Button variant="contained" onClick={() => handleOpenPhoto(croppedPhoto.location)}>
+                See Photo
+              </Button>
             );
           },
         }}
       />
-
       <Dialog
         open={openImageDialog}
         onClose={handleCloseDialog}

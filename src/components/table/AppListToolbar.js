@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled, alpha } from '@mui/material/styles';
 import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
 // component
-import Iconify from '../../../components/iconify';
+import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
 
@@ -32,13 +32,13 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-UserListToolbar.propTypes = {
+AppListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }) {
+export default function AppListToolbar({ numSelected, filterName, onFilterName }) {
   return (
     <StyledRoot
       sx={{

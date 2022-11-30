@@ -17,13 +17,13 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'product',
-    path: '/dashboard/products',
+    title: 'presence',
+    path: '/dashboard/presence',
     icon: icon('ic_cart'),
   },
   {
-    title: 'blog',
-    path: '/dashboard/blog',
+    title: 'Failed Presence',
+    path: '/dashboard/presence-failed',
     icon: icon('ic_blog'),
   },
   {
