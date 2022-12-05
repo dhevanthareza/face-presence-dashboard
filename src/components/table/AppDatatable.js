@@ -23,12 +23,11 @@ import {
 import Iconify from '../iconify';
 import Scrollbar from '../scrollbar';
 
-
 import httpClient from '../../utils/httpClient';
 import AppTableHeader from './AppTableHeader';
 import AppListToolbar from './AppListToolbar';
 
-export default function AppDatatable({baseUrl, tableHead, title, slots = {}}) {
+export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) {
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -96,28 +95,27 @@ export default function AppDatatable({baseUrl, tableHead, title, slots = {}}) {
 
   const isNotFound = !datas.length && !!filter;
 
-
   const fetchDatas = async () => {
-    const response = await httpClient.get(`${baseUrl}/datatable`);
+    const response = await httpClient.get(`${baseUrl}/datatable`, {
+      params: { page: page + 1, limit: rowsPerPage },
+    });
     setDatas(response.data.data.result);
     setDataCount(response.data.data.count);
-  }
+  };
 
   useEffect(() => {
-    fetchDatas()
-  }, []);
-
+    fetchDatas();
+  }, [page, rowsPerPage]);
 
   return (
     <>
-
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            { title }
+            {title}
           </Typography>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            { title }
+            {title}
           </Button>
         </Stack>
 
@@ -130,7 +128,7 @@ export default function AppDatatable({baseUrl, tableHead, title, slots = {}}) {
                 <AppTableHeader
                   order={order}
                   orderBy={orderBy}
-                  headLabel={[...tableHead, { id: '', },]}
+                  headLabel={[...tableHead, { id: '' }]}
                   rowCount={dataCount}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
@@ -155,15 +153,13 @@ export default function AppDatatable({baseUrl, tableHead, title, slots = {}}) {
                           </Stack>
                         </TableCell> */}
 
-                        {
-                          tableHead.map((head, index) => {
-                            return (
-                              <TableCell key={index} align="left">
-                                { slots[head.id] ? slots[head.id](row[head.id], index, row) : row[head.id]}
-                              </TableCell>
-                            );
-                          })
-                        }
+                        {tableHead.map((head, index) => {
+                          return (
+                            <TableCell key={index} align="left">
+                              {slots[head.id] ? slots[head.id](row[head.id], index, row) : row[head.id]}
+                            </TableCell>
+                          );
+                        })}
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>

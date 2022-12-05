@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AppDatatable from '../components/table/AppDatatable';
@@ -7,6 +8,10 @@ const TABLE_HEAD = [
   { id: 'userId', label: 'User', alignRight: false },
   { id: 'user_photo', label: 'User Photo', alignRight: false },
   { id: 'cropped_photo', label: 'Presence Photo', alignRight: false },
+  { id: 'check_out_cropped_photo', label: 'Presence Out Photo', alignRight: false },
+  { id: 'date', label: 'Date', alignRight: false },
+  { id: 'distance', label: 'Distance', alignRight: false },
+  { id: 'check_out_distance', label: 'Check Out Distance', alignRight: false },
 ];
 export default function PresencePage() {
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -47,6 +52,18 @@ export default function PresencePage() {
               </Button>
             );
           },
+          check_out_cropped_photo: (croppedPhoto, index) => {
+            return (
+              <Button variant="contained" onClick={() => handleOpenPhoto(croppedPhoto.location)}>
+                See Photo
+              </Button>
+            );
+          },
+          date: (date) => {
+            return (
+              <span>{ dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY').toString() }</span>
+            );
+          }
         }}
       />
       <Dialog

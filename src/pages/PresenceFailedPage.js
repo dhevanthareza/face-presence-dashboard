@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AppDatatable from '../components/table/AppDatatable';
@@ -6,7 +7,9 @@ import AppDatatable from '../components/table/AppDatatable';
 const TABLE_HEAD = [
   { id: 'userId', label: 'UserId', alignRight: false },
   { id: 'user_photo', label: 'User Photo', alignRight: false },
-  { id: 'cropped_photo', label: 'Cropped Photo', alignRight: false },
+  { id: 'cropped_photo', label: 'Presence Photo', alignRight: false },
+  { id: 'date', label: 'Date', alignRight: false },
+  { id: 'distance', label: 'Distance', alignRight: false },
 ];
 export default function PresenceFailed() {
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -28,7 +31,7 @@ export default function PresenceFailed() {
       <AppDatatable
         baseUrl={'/presence-failed'}
         tableHead={TABLE_HEAD}
-        title="Presence"
+        title="Failed Presence"
         slots={{
           userId: (user, index) => {
             return user.fullname
@@ -47,6 +50,11 @@ export default function PresenceFailed() {
               </Button>
             );
           },
+          date: (date) => {
+            return (
+              <span>{ dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY HH:mm:ss').toString() }</span>
+            );
+          }
         }}
       />
       <Dialog
