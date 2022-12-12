@@ -34,22 +34,33 @@ export default function PresencePage() {
   };
 
   const handleFlagPresenceIn = async (presenceId, newStatus) => {
-    datatableRef.current.handleCloseAction()
-    Swal.showLoading()
-    const response = await httpClient.post("/presence/flag-presence", {
-      presenceId, newStatus
-    })
-    datatableRef.current.refreshTable()
-    Swal.close()
+    datatableRef.current.handleCloseAction();
+    Swal.showLoading();
+    const response = await httpClient.post('/presence/flag-presence', {
+      presenceId,
+      newStatus,
+    });
+    datatableRef.current.refreshTable();
+    Swal.close();
   };
   const handleFlagPresenceOut = async (presenceId, newStatus) => {
-    datatableRef.current.handleCloseAction()
-    Swal.showLoading()
-    const response = await httpClient.post("/presence/flag-presence-out", {
-      presenceId, newStatus
-    })
-    datatableRef.current.refreshTable()
-    Swal.close()
+    datatableRef.current.handleCloseAction();
+    Swal.showLoading();
+    const response = await httpClient.post('/presence/flag-presence-out', {
+      presenceId,
+      newStatus,
+    });
+    datatableRef.current.refreshTable();
+    Swal.close();
+  };
+  const handleDeleteButton = async (presenceId) => {
+    datatableRef.current.handleCloseAction();
+    Swal.showLoading();
+    const response = await httpClient.post('/presence/delete', {
+      presenceId,
+    });
+    datatableRef.current.refreshTable();
+    Swal.close();
   };
 
   return (
@@ -91,10 +102,10 @@ export default function PresencePage() {
             return <span>{dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY').toString()}</span>;
           },
           status: (status) => {
-            return status ?? "-";
+            return status ?? '-';
           },
           statusOut: (status) => {
-            return status ?? "-";
+            return status ?? '-';
           },
           action: (presenceId) => {
             return (
@@ -114,6 +125,10 @@ export default function PresencePage() {
                 <MenuItem onClick={() => handleFlagPresenceOut(presenceId, 'FP')}>
                   <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
                   Flag FP OUT
+                </MenuItem>
+                <MenuItem onClick={() => handleDeleteButton(presenceId)}>
+                  <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                  Delete
                 </MenuItem>
               </>
             );

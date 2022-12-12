@@ -41,6 +41,16 @@ export default function PresenceFailed() {
     Swal.close();
   };
 
+  const handleDeleteButton = async (presenceId) => {
+    datatableRef.current.handleCloseAction();
+    Swal.showLoading();
+    const response = await httpClient.post('/presence/delete-failed', {
+      presenceId,
+    });
+    datatableRef.current.refreshTable();
+    Swal.close();
+  };
+
   return (
     <>
       <Helmet>
@@ -85,6 +95,10 @@ export default function PresenceFailed() {
                 <MenuItem onClick={() => handleFlagPresence(presenceId, 'FN')}>
                   <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
                   Flag FN
+                </MenuItem>
+                <MenuItem onClick={() => handleDeleteButton(presenceId)}>
+                  <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                  Delete
                 </MenuItem>
               </>
             );
