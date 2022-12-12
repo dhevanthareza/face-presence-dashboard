@@ -1,7 +1,10 @@
-import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import Swal from 'sweetalert2';
 import { Helmet } from 'react-helmet-async';
+import httpClient from '../utils/httpClient';
+import Iconify from '../components/iconify';
 import AppDatatable from '../components/table/AppDatatable';
 
 const TABLE_HEAD = [
@@ -12,8 +15,12 @@ const TABLE_HEAD = [
   { id: 'date', label: 'Date', alignRight: false },
   { id: 'distance', label: 'Distance', alignRight: false },
   { id: 'check_out_distance', label: 'Check Out Distance', alignRight: false },
+  { id: 'status', label: 'IN Status', alignRight: false },
+  { id: 'statusOut', label: 'OUT Status', alignRight: false },
 ];
 export default function PresencePage() {
+  const datatableRef = useRef();
+
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [photo, setPhoto] = useState(null);
 
@@ -25,18 +32,39 @@ export default function PresencePage() {
   const handleCloseDialog = () => {
     setOpenImageDialog(false);
   };
+
+  const handleFlagPresenceIn = async (presenceId, newStatus) => {
+    datatableRef.current.handleCloseAction()
+    Swal.showLoading()
+    const response = await httpClient.post("/presence/flag-presence", {
+      presenceId, newStatus
+    })
+    datatableRef.current.refreshTable()
+    Swal.close()
+  };
+  const handleFlagPresenceOut = async (presenceId, newStatus) => {
+    datatableRef.current.handleCloseAction()
+    Swal.showLoading()
+    const response = await httpClient.post("/presence/flag-presence-out", {
+      presenceId, newStatus
+    })
+    datatableRef.current.refreshTable()
+    Swal.close()
+  };
+
   return (
     <>
       <Helmet>
         <title> Presence | Face Dashboard </title>
       </Helmet>
       <AppDatatable
+        ref={datatableRef}
         baseUrl={'/presence'}
         tableHead={TABLE_HEAD}
         title="Presence"
         slots={{
           userId: (user, index) => {
-            return user.fullname
+            return user.fullname;
           },
           user_photo: (photo, index, data) => {
             return (
@@ -60,10 +88,36 @@ export default function PresencePage() {
             );
           },
           date: (date) => {
+            return <span>{dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY').toString()}</span>;
+          },
+          status: (status) => {
+            return status ?? "-";
+          },
+          statusOut: (status) => {
+            return status ?? "-";
+          },
+          action: (presenceId) => {
             return (
-              <span>{ dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY').toString() }</span>
+              <>
+                <MenuItem onClick={() => handleFlagPresenceIn(presenceId, 'TP')}>
+                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                  Flag TP IN
+                </MenuItem>
+                <MenuItem onClick={() => handleFlagPresenceIn(presenceId, 'FP')}>
+                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                  Flag FP IN
+                </MenuItem>
+                <MenuItem onClick={() => handleFlagPresenceOut(presenceId, 'TP')}>
+                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                  Flag TP OUT
+                </MenuItem>
+                <MenuItem onClick={() => handleFlagPresenceOut(presenceId, 'FP')}>
+                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                  Flag FP OUT
+                </MenuItem>
+              </>
             );
-          }
+          },
         }}
       />
       <Dialog

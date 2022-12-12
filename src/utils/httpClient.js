@@ -6,7 +6,7 @@ axios.interceptors.request.use(
     // Do something before request is sent
     // config.headers.Authorization = `Bearer ${your_token}`;
     // OR config.headers.common['Authorization'] = `Bearer ${your_token}`;
-    config.baseURL = 'https://face.dhevantugas.my.id';
+    config.baseURL = 'http://localhost:8000';
 
     return config;
   },

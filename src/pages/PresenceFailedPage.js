@@ -1,8 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import Swal from 'sweetalert2';
+import httpClient from '../utils/httpClient';
 import AppDatatable from '../components/table/AppDatatable';
+import Iconify from '../components/iconify';
 
 const TABLE_HEAD = [
   { id: 'userId', label: 'UserId', alignRight: false },
@@ -10,8 +13,11 @@ const TABLE_HEAD = [
   { id: 'cropped_photo', label: 'Presence Photo', alignRight: false },
   { id: 'date', label: 'Date', alignRight: false },
   { id: 'distance', label: 'Distance', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
 ];
 export default function PresenceFailed() {
+  const datatableRef = useRef();
+
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [photo, setPhoto] = useState(null);
 
@@ -23,18 +29,31 @@ export default function PresenceFailed() {
   const handleCloseDialog = () => {
     setOpenImageDialog(false);
   };
+
+  const handleFlagPresence = async (presenceId, newStatus) => {
+    datatableRef.current.handleCloseAction();
+    Swal.showLoading();
+    const response = await httpClient.post('/presence/flag-presence-failed', {
+      presenceId,
+      newStatus,
+    });
+    datatableRef.current.refreshTable();
+    Swal.close();
+  };
+
   return (
     <>
       <Helmet>
         <title> Presence Failed | Face Dashboard </title>
       </Helmet>
       <AppDatatable
+        ref={datatableRef}
         baseUrl={'/presence-failed'}
         tableHead={TABLE_HEAD}
         title="Failed Presence"
         slots={{
           userId: (user, index) => {
-            return user.fullname
+            return user == null ? '-' : user.fullname;
           },
           user_photo: (photo, index, data) => {
             return (
@@ -51,10 +70,25 @@ export default function PresenceFailed() {
             );
           },
           date: (date) => {
+            return <span>{dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY HH:mm:ss').toString()}</span>;
+          },
+          status: (status) => {
+            return status ?? "-";
+          },
+          action: (presenceId) => {
             return (
-              <span>{ dayjs(date).add(7, 'hour').format('dddd, MMMM YYYY HH:mm:ss').toString() }</span>
+              <>
+                <MenuItem onClick={() => handleFlagPresence(presenceId, 'TN')}>
+                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                  Flag TN
+                </MenuItem>
+                <MenuItem onClick={() => handleFlagPresence(presenceId, 'FN')}>
+                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                  Flag FN
+                </MenuItem>
+              </>
             );
-          }
+          },
         }}
       />
       <Dialog

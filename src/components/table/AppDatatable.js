@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 // @mui
 import {
   Card,
@@ -27,9 +27,10 @@ import httpClient from '../../utils/httpClient';
 import AppTableHeader from './AppTableHeader';
 import AppListToolbar from './AppListToolbar';
 
-export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) {
+const AppDatatable = forwardRef(({ baseUrl, tableHead, title, slots = {} }, ref) => {
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
+  const [selectedData, setSelectedData] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
@@ -39,8 +40,9 @@ export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) 
   const [datas, setDatas] = useState([]);
   const [dataCount, setDataCount] = useState(0);
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = (event, selectedId) => {
     setOpen(event.currentTarget);
+    setSelectedData(selectedId)
   };
 
   const handleCloseMenu = () => {
@@ -91,6 +93,15 @@ export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) 
     setfilter(event.target.value);
   };
 
+  useImperativeHandle(ref, () => ({
+    handleCloseAction() {
+      handleCloseMenu()
+    },
+    refreshTable() {
+      refresh()
+    }
+  }));
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataCount.length) : 0;
 
   const isNotFound = !datas.length && !!filter;
@@ -102,6 +113,10 @@ export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) 
     setDatas(response.data.data.result);
     setDataCount(response.data.data.count);
   };
+
+  const refresh = async () => {
+    fetchDatas()
+  }
 
   useEffect(() => {
     fetchDatas();
@@ -162,7 +177,7 @@ export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) 
                         })}
 
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row._id)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -233,16 +248,23 @@ export default function AppDatatable({ baseUrl, tableHead, title, slots = {} }) 
           },
         }}
       >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
+        {slots.action ? (
+          slots.action(selectedData)
+        ) : (
+          <>
+            <MenuItem>
+              <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+              Edit
+            </MenuItem>
+            <MenuItem sx={{ color: 'error.main' }}>
+              <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+              Delete
+            </MenuItem>
+          </>
+        )}
       </Popover>
     </>
   );
-}
+});
+
+export default AppDatatable;
