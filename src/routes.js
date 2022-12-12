@@ -19,6 +19,7 @@ export default function Router() {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
+        { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'presence', element: <PresencePage /> },
@@ -29,18 +30,18 @@ export default function Router() {
     //   path: 'login',
     //   element: <LoginPage />,
     // },
-    // {
-    //   element: <SimpleLayout />,
-    //   children: [
-    //     { element: <Navigate to="/dashboard/app" />, index: true },
-    //     { path: '404', element: <Page404 /> },
-    //     { path: '*', element: <Navigate to="/404" /> },
-    //   ],
-    // },
-    // {
-    //   path: '*',
-    //   element: <Navigate to="/404" replace />,
-    // },
+    {
+      element: <SimpleLayout />,
+      children: [
+        { element: <Navigate to="/dashboard/app" />, index: true },
+        { path: '404', element: <Page404 /> },
+        { path: '*', element: <Navigate to="/404" /> },
+      ],
+    },
+    {
+      path: '*',
+      element: <Navigate to="/404" replace />,
+    },
   ]);
 
   return routes;
