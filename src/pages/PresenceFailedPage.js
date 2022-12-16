@@ -67,7 +67,7 @@ export default function PresenceFailed() {
           },
           user_photo: (photo, index, data) => {
             return (
-              <Button variant="contained" onClick={() => handleOpenPhoto(data.userId.photo.location)}>
+              <Button variant="contained" onClick={() => handleOpenPhoto(data.userId.cropped_photo.location)}>
                 See Photo
               </Button>
             );
